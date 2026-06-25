@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebAR CPR Training</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+
+  <a-scene
+    mindar-image="imageTargetSrc: ./targets.mind;"
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: true">
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity mindar-image-target="targetIndex: 0">
+
+      <!-- Changing AR visual object/icon -->
+      <a-text
+        id="stepIcon"
+        value="!"
+        position="0 0.03 0.03"
+        width="2"
+        align="center"
+        anchor="center"
+        color="#1565C0"
+        scale="1.6 1.6 1.6">
+      </a-text>
+
+      <!-- CPR instruction text -->
+      <a-text
+        id="stepText"
+        value="STEP 1&#10;Check responsiveness"
+        position="0 0.40 0.03"
+        width="2.2"
+        align="center"
+        anchor="center"
+        color="#000000"
+        scale="1.0 1.0 1.0">
+      </a-text>
+
+    </a-entity>
+  </a-scene>
+
+  <button onclick="nextStep()" style="
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    padding: 14px 26px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    background-color: #1565C0;
+    color: white;">
+    Next Step
+  </button>
+
+  <script>
+    const steps = [
+      "STEP 1: Check responsiveness",
+      "STEP 2: Call emergency services",
+      "STEP 3: Open the airway",
+      "STEP 4: Check breathing",
+      "STEP 5: Place hands on the centre of the chest",
+      "STEP 6: Start chest compressions",
+      "STEP 7: Push hard and fast at a steady rhythm",
+      "STEP 8: Continue until help arrives"
+    ];
+
+    const icons = [
+      "!",
+      "CALL",
+      "^",
+      "~~~",
+      "HANDS",
+      "DOWN",
+      "<->",
+      "OK"
+    ];
+
+    const colors = [
+      "#1565C0",
+      "#EF6C00",
+      "#455A64",
+      "#00ACC1",
+      "#D32F2F",
+      "#7B1FA2",
+      "#F9A825",
+      "#2E7D32"
+    ];
+
+    let currentStep = 0;
+
+    function updateStep() {
+      document.querySelector("#stepText").setAttribute(
+        "value",
+        steps[currentStep].replace(": ", "\n")
+      );
+
+      document.querySelector("#stepIcon").setAttribute(
+        "value",
+        icons[currentStep]
+      );
+
+      document.querySelector("#stepIcon").setAttribute(
+        "color",
+        colors[currentStep]
+      );
+
+      document.querySelector("button").style.backgroundColor = colors[currentStep];
+    }
+
+    function nextStep() {
+      currentStep++;
+
+      if (currentStep >= steps.length) {
+        currentStep = 0;
+      }
+
+      updateStep();
+    }
+
+    updateStep();
+  </script>
+
+</body>
+</html>
